@@ -1,0 +1,47 @@
+function num_to_letter($num){
+        $ones_letters = array('','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه','ده','یازده',
+            'دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هژده','نزده');
+        $tens_letters = array('','ده','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود');
+        $handreds_letters = array('صد','هزار','میلیون','بیلیون','تریلیون','کوادریلیون');
+
+        /*$num_len  = strlen((string)$num);
+        $numbers  = explode('',(string)$num);*/
+
+        $num = number_format($num, 2, ".", ",");
+        $num_arr = explode(".", $num);
+        $whole_num = $num_arr[0];
+        $decimal_num = $num_arr[1];
+        $whole_arr = array_reverse(explode(",", $whole_num));
+        krsort($whole_arr);
+
+        $rettxt = "";
+        foreach ($whole_arr as $key => $i) {
+            $i= intval($i);
+            if ($i < 20) {
+                $rettxt .= $ones_letters[$i];
+            } elseif ($i < 100) {
+                $rettxt .= $tens_letters[substr($i, 0, 1)];
+                $rettxt .= " " . $ones_letters[substr($i, 1, 1)];
+            } else {
+                $rettxt .= $ones_letters[substr($i, 0, 1)] . " " . $handreds_letters[0];
+                $rettxt .= " " . $tens_letters[intval(substr($i, 1, 1))];
+                $rettxt .= " " . $ones_letters[intval(substr($i, 2, 1))];
+            }
+            if ($key > 0) {
+                $rettxt .= "  " . $handreds_letters[$key];
+                if($whole_arr[$key-1]>0){
+                    $rettxt .=  " و ";
+                }
+            }
+        }
+        if ($decimal_num > 0) {
+            $rettxt .= " اعشاریه ";
+            if ($decimal_num < 20) {
+                $rettxt .= $ones_letters[$decimal_num];
+            } elseif ($decimal_num < 100) {
+                $rettxt .= $tens_letters[substr($decimal_num, 0, 1)];
+                $rettxt .= " " . $ones_letters[substr($decimal_num, 1, 1)];
+            }
+        }
+        return $rettxt;
+    }
